@@ -51,25 +51,24 @@
 #Part B:
 with open("input.txt") as iFile:
     grid = [[int(x) for x in line if x != "\n"] for line in iFile.readlines()]
-    height = len(grid)
-    width = len(grid[0])
+    xMax = len(grid)
+    yMax = len(grid[0])
     maxViewingScore = 0
 
     def findViewingScore(x, y, tree):
         def findDirectionScore(x1, y1, direction):
-            if not (0 <= x1 < width and 0 <= y1 < height):
-                return 0
+            if not (0 <= x1 < xMax and 0 <= y1 < yMax):
+                return -1
             if grid[x1][y1] >= tree:
-                return 1
+                return 0
             return 1 + findDirectionScore(x1 + direction[0], y1 + direction[1], direction) 
         viewingScore = 1
         for direction in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            viewingScore *= findDirectionScore(x + direction[0], y + direction[1], direction)
+            viewingScore *= 1 + findDirectionScore(x + direction[0], y + direction[1], direction)
         return viewingScore
         
-    for y, row in enumerate(grid):
-        for x, tree in enumerate(row):
+    for x, row in enumerate(grid):
+        for y, tree in enumerate(row):
             viewingScore = findViewingScore(x, y, tree)
-            print(f"{x} {y} {viewingScore}")
             maxViewingScore = max(maxViewingScore, viewingScore)
     print(maxViewingScore)
